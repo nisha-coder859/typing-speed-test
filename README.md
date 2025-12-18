@@ -1,5 +1,5 @@
 Typing speed test using Python
-# Typing Speed Test
+#App Name: "KeyZen"-"Smart minds,Fast fingers,Clean Stats."
 
 A web-based typing speed test application built using Python and Flask.
 
