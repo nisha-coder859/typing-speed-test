@@ -17,3 +17,9 @@ A web-based typing speed test application built using Python and Flask.
 3. Open browser and go to:
    http://127.0.0.1:5000
 
+#Team members
+1.Nisha.D
+2.N Lakshmi Varshini
+3.Nidhi.S
+4.Parth Singhal
+
