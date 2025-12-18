@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Typing Test</title>
+    <style>
+        body{
+            font-family:Arial;
+            background:#eef5ff;
+            text-align:center;
+            padding-top:30px;
+        }
+        #text{
+            width:70%;
+            margin:auto;
+            font-size:20px;
+            padding:20px;
+            background:white;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+            line-height:1.5;
+        }
+        #inputBox{
+            width:70%;
+            height:180px;
+            margin-top:20px;
+            font-size:18px;
+            padding:12px;
+            border:2px solid #007bff;
+            border-radius:10px;
+        }
+        .correct{color:#0b9d2a;font-weight:bold;}
+        .wrong{color:red;font-weight:bold;}
+
+        #bar{width:100%;height:8px;background:lightgray;margin-bottom:15px;}
+        #progress{height:8px;width:100%;background:green;}
+    </style>
+</head>
+<body>
+
+<h2>
+    {% if mode=="backwards" %}
+    🔥 Backwards Challenge 🔥
+    {% else %}
+    Typing Test
+    {% endif %}
+</h2>
+
+<div id="bar"><div id="progress"></div></div>
+
+<h3>Time Left: <span id="timer">{{ time_limit }}</span>s</h3>
+
+<div id="text" style="white-space: pre-wrap; font-size:20px; color:black;">
+    {{ paragraph }}
+</div>
+
+
+<form action="/result" method="POST" id="typingForm">
+    
+    <textarea id="inputBox" name="typed" placeholder="Start typing here..." autofocus></textarea>
+
+    <input type="hidden" name="name" value="{{ name }}">
+    <input type="hidden" name="start" id="startTime">
+    <input type="hidden" name="time_limit" value="{{ time_limit }}">
+    <input type="hidden" name="original_para" value="{{ paragraph }}">
+    <input type="hidden" name="mode" value="{{ mode }}">
+
+    <br>
+    <button type="submit">Finish 🏁</button>
+</form>
+
+<script>
+/* -------- SAFE DATA FROM FLASK -------- */
+let para = {{ paragraph | tojson }};
+let mode = "{{ mode }}";
+let timeLimit = {{ time_limit }};
+let timeLeft = timeLimit;
+
+let box = document.getElementById("inputBox");
+let display = document.getElementById("text");
+let started = false;
+
+/* Set paragraph text */
+if (mode === "backwards") {
+    display.innerText = para.split("").reverse().join("");
+} else {
+    display.innerText = para;
+}
+
+/* Start time on first keypress */
+box.addEventListener("input", () => {
+    if (!started) {
+        document.getElementById("startTime").value = Date.now() / 1000;
+        started = true;
+    }
+});
+
+/* Highlight logic (normal mode only) */
+box.addEventListener("input", () => {
+    if (mode === "backwards") return;
+
+    let typed = box.value;
+    let result = "";
+
+    for (let i = 0; i < para.length; i++) {
+        if (i < typed.length) {
+            result += typed[i] === para[i]
+                ? `<span class="correct">${para[i]}</span>`
+                : `<span class="wrong">${para[i]}</span>`;
+        } else {
+            result += para[i];
+        }
+    }
+    display.innerHTML = result;
+});
+
+/* Timer */
+let timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    document.getElementById("progress").style.width =
+        (timeLeft / timeLimit) * 100 + "%";
+
+    if (timeLeft <= 0) {
+        clearInterval(timer);
+        document.getElementById("typingForm").submit();
+    }
+}, 1000);
+</script>
+
+
+</body>
+</html>

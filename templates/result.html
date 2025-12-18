@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Typing Result</title>
+    <style>
+        body{
+            background:#eef5ff;
+            font-family:Arial, sans-serif;
+            text-align:center;
+            padding-top:60px;
+        }
+        .card{
+            width:450px;
+            background:white;
+            margin:auto;
+            padding:30px;
+            border-radius:12px;
+            box-shadow:0 0 12px rgba(0,0,0,0.1);
+        }
+        .title{
+            font-size:30px;
+            font-weight:bold;
+            margin-bottom:10px;
+        }
+        .score{
+            font-size:22px;
+            margin:8px 0;
+        }
+        .btn{
+            margin-top:15px;
+            display:inline-block;
+            background:#007bff;
+            padding:10px 20px;
+            color:white;
+            border-radius:8px;
+            text-decoration:none;
+            font-size:17px;
+            margin-right:8px;
+        }
+        .btn:hover{background:#005bd1;}
+
+        .good{color:green;font-weight:bold;}
+        .avg{color:orange;font-weight:bold;}
+        .bad{color:red;font-weight:bold;}
+
+        .streak{
+            background:#ffecd1;
+            padding:6px 12px;
+            margin-top:12px;
+            font-size:16px;
+            border-radius:8px;
+            color:#ff7b00;
+            display:inline-block;
+        }
+        .medal{
+            font-size:35px;
+            margin-top:10px;
+            animation: glow 1.2s infinite alternate;
+        }
+        @keyframes glow{
+            from{opacity:0.6;}
+            to{opacity:1;}
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="title">🎉 Test Completed!</div>
+
+    <div class="score"><b>Name:</b> {{ name }}</div>
+    <div class="score"><b>WPM:</b> {{ wpm|round(2) }}</div>
+    <div class="score"><b>Accuracy:</b> {{ accuracy|round(2) }}%</div>
+
+    {% if wpm >= 50 and accuracy >= 90 %}
+        <p class="good">🔥 Outstanding Performance!</p>
+        <div class="medal">🏆</div>
+
+    {% elif wpm >= 35 %}
+        <p class="good">🚀 Great Speed! Keep Going!</p>
+
+    {% elif wpm >= 20 %}
+        <p class="avg">🙂 Good! Little more practice!</p>
+
+    {% elif accuracy >= 85 %}
+        <p class="avg">💡 Good accuracy! Increase speed slightly</p>
+
+    {% else %}
+        <p class="bad">📌 Needs practice — You can improve!</p>
+    {% endif %}
+
+    {% if streak %}
+        <div class="streak">🔥 Daily Streak: <b>{{ streak }}</b> day{{ 's' if streak > 1 }}</div>
+    {% endif %}
+
+    <br><br>
+    <a class="btn" href="/">Home 🏠</a>
+    <a class="btn" href="/test_again">Try Again 🔄</a>
+    <a class="btn" href="/progress">Progress 📊</a>
+    <a class="btn" href="/history">History 📄</a>
+    <a class="btn" href="/leaderboard">Leaderboard 🏆</a>
+    <a class="btn" href="/daily">Daily Challenge 🔥</a>
+
+</div>
+
+</body>
+</html>
